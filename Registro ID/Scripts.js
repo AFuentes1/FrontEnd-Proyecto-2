@@ -4,5 +4,5 @@ document.getElementById("registroForm").addEventListener("submit", function(even
     // Aquí puedes agregar la lógica para guardar la información 
     
     // Redirigir a una nueva página HTML
-    window.location.href = "https://ejemplo.com";
+    window.location.href = "../ID Puestos/mainPuesto.html";
 });
