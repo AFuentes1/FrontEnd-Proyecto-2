@@ -1,35 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
     <title>Empresa</title>
     <link rel="stylesheet" href="Styles.css">
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="#" id = "openModalLink">Insertar Empleado</a></li>
+            <li><a href="#" id = "openModalLinkEmergencias">Borrar Empleado</a></li>
+            <li><a href="#" id = "openModalLinkNutricion">Actualizar Empleados</a></li>
+            <li><a href="#" id = "openModalLinkEsteticos">Movimientos</a></li>
+            
+        </ul>
+    </nav>
 
-
-
-<nav>
-    <ul>
-        <li><a href="#" id = "openModalLink">Insertar Empleado</a></li>
-        <li><a href="#" id = "openModalLinkEmergencias">Borrar Empleado</a></li>
-        <li><a href="#" id = "openModalLinkNutricion">Actualizar Empleados</a></li>
-        <li><a href="#" id = "openModalLinkEsteticos">Movimientos</a></li>
+    <div class="wrapper" id="filtroSelect" >
+        <!-- Añadido: Lista desplegable, campo de texto y botón de consulta -->
+        <select id="filtroSelect">
+            <option value="nombre">Nombre</option>
+            <option value="identificacion">Número de Identificación</option>
+        </select>
+        <input type="text" id="consultaInput">
+        <button id="consultaButton">Consultar</button>
         
-    </ul>
-</nav>
+        <div class="wrapper" id="dataContainer"> 
+            <!-- Tu contenido existente -->
+            <form id="registroForm" action="//Aqui va el archivo donde se guarde la info"> 
+                <h1>Empleados</h1>
+                <div class="registerLink">
+                    <!-- Aquí se pueden agregar otros elementos si es necesario -->
+                </div>
+            </form>
+    
+            <!-- Aquí se mostrará la tabla dinámica -->
+        </div>
+    </div>
 
-<div class = wrapper id =  "dataContainer"> 
-    <form id="registroForm" action="//Aqui va el archivo donde se guarde la info"> 
-        <h1>Empleados</h1>
+    
 
-        <div class="registerLink">
-    </form>
-</div>
-
-
-<script src="Scripts.js"></script>
-
+    <script src="Scripts.js"></script>
 </body>
 </html>

@@ -30,7 +30,6 @@ body::before {
 }
 
 .wrapper{
-    width: 420px;
     background: rgba(98, 162, 185, 0.6); /* Color oscuro con opacidad del 50% */    border: 2px solid rgba(255, 255, 255, .2);
     backdrop-filter: blur(10px);
     box-shadow: 0 0 10px rgba(0,0,0,.2);
@@ -111,5 +110,3 @@ nav ul li a:hover {
 .tabla th {
     background-color: #2f6e6b;
 }
-
-
