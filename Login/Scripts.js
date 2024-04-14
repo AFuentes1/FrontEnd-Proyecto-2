@@ -38,16 +38,13 @@ document.addEventListener("DOMContentLoaded", function() {
             // Verifica si la clave no es nula
             if (data.UserKey != null) {
                 var userKey = data.UserKey;
-                console.log("Key", userKey);
-
+                document.cookie = "userKey=" + userKey + "; path=/";
+                console.log("js1", userKey);
                 window.location.href = '../Principal/Main.html'; // Reemplaza 'nuevo_html.html' con la ruta correcta
             } else {
                 alert("Usuario o contraseña incorrectos");
             }
         })
-
-        
-        
             
         .catch(error => {
             // Para manejar los errores 
