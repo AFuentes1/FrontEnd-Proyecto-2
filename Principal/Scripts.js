@@ -119,17 +119,24 @@ document.addEventListener("DOMContentLoaded", function() {
         // Obtener el valor del campo de texto y del filtro seleccionado
         var filtro = filtroSelect.value; // Obtener el valor seleccionado en la lista desplegable
         var consulta = consultaInput.value;
-        console.log(filtro, consulta)
 
         // Verificar que ambos valores no estén vacíos antes de realizar la consulta
         if (filtro && consulta) {
-            // Crear objeto de datos a enviar al servidor
-            var formData = {
-                key: userKey,
-                filtro: filtro, // Agregar el valor seleccionado en la lista desplegable
-                consulta: consulta // Agregar la consulta al objeto de datos
-            };
 
+            // Agregar la variable correspondiente según el filtro seleccionado
+            if (filtro === "nombre") {
+                // Crear objeto de datos a enviar al servidor
+                var formData = {
+                    key: userKey,
+                    byName: consulta // Agregar la consulta al objeto de datos
+                };
+            } else if (filtro === "identificacion") {
+                var formData = {
+                    key: userKey,
+                    byDocID: consulta // Agregar la consulta al objeto de datos
+                }; 
+            }
+            console.log(formData)
             var jsonData = JSON.stringify(formData);
             // Enviar solicitud al API
             fetch('https://localhost:7081/Consulta', {
