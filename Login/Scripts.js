@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function() {
     var form = document.querySelector('form');
     form.addEventListener('submit', function(event) {
@@ -9,15 +10,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Crea un objeto con los datos del formulario
         var formData = {
-            usuario: usuario,
-            contrasena: contrasena
+            UserName: usuario,
+            Password: contrasena
         };
 
         // Convierte el objeto a JSON
         var jsonData = JSON.stringify(formData);
 
         // Envía los datos al endpoint utilizando fetch
-        fetch('tu-endpoint-aqui', {
+        fetch('https://localhost:7081/login', { // Cambia el URL por el endpoint correcto
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,9 +26,29 @@ document.addEventListener("DOMContentLoaded", function() {
             body: jsonData
         })
         .then(response => {
-            // para manejar la respuesta del servidor 
-            console.log('Respuesta del servidor:', response);
+            if (response.ok) {
+                response = response.json();
+                return response; // Devuelve los datos JSON de la respuesta
+                
+            } else {
+                throw new Error('La respuesta del servidor no es válida');
+            }
         })
+        .then(data => {
+            // Verifica si la clave no es nula
+            if (data.UserKey != null) {
+                var userKey = data.UserKey;
+                console.log("Key", userKey);
+
+                window.location.href = '../Principal/Main.html'; // Reemplaza 'nuevo_html.html' con la ruta correcta
+            } else {
+                alert("Usuario o contraseña incorrectos");
+            }
+        })
+
+        
+        
+            
         .catch(error => {
             // Para manejar los errores 
             console.error('Error:', error);
@@ -62,7 +83,24 @@ document.addEventListener("DOMContentLoaded", function() {
         event.preventDefault();
 
         // Redirigir manualmente utilizando window.location.href
-        window.location.href = "../Registro/Registro.html";
+        window.location.href = "../Usuario/Registro/Registro.html";
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    var submitButton = document.querySelector("button[type='submit']");
+    var clickCount = 0;
+
+    submitButton.addEventListener("click", function(event) {
+        clickCount++;
+
+        if (clickCount >= 5) {
+            submitButton.disabled = true;
+            setTimeout(function() {
+                submitButton.disabled = false;
+                clickCount = 0;
+            }, 60000); // 60000 milliseconds = 1 minute
+        }
     });
 });
 
