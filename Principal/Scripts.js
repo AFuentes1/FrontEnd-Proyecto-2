@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Leer la cookie para obtener userKey
     var userKey = getCookie("userKey");
-    console.log("js2", userKey);
 
     // Verificar si la userKey está presente
     if (!userKey) {
@@ -33,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     .then(data => {
         // Llamar a la función para mostrar la tabla con los datos recibidos de la API
-        console.log(data);
         mostrarTabla(data);
     })
     .catch(error => {
@@ -99,8 +97,6 @@ function mostrarTabla(data) {
 document.addEventListener("DOMContentLoaded", function() {
     // Leer la cookie para obtener userKey
     var userKey = getCookie("userKey");
-    console.log("js2C", userKey);
-
     // Verificar si la userKey está presente
     if (!userKey) {
         // La userKey no está presente, probablemente el usuario no ha iniciado sesión
@@ -121,10 +117,14 @@ document.addEventListener("DOMContentLoaded", function() {
         var consulta = consultaInput.value;
 
         // Verificar que ambos valores no estén vacíos antes de realizar la consulta
-        if (filtro && consulta) {
-
+        if (filtro || consulta) {
+            if (consulta.length = 0){
+                var formData = {
+                    key: userKey
+                };
+            }
             // Agregar la variable correspondiente según el filtro seleccionado
-            if (filtro === "nombre") {
+            else if (filtro === "nombre") {
                 // Crear objeto de datos a enviar al servidor
                 var formData = {
                     key: userKey,
@@ -135,9 +135,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     key: userKey,
                     byDocID: consulta // Agregar la consulta al objeto de datos
                 }; 
+            }else {
+                var formData = {
+                    key: userKey,
+                };
             }
-            console.log(formData)
+
             var jsonData = JSON.stringify(formData);
+            console.log(jsonData);
             // Enviar solicitud al API
             fetch('https://localhost:7081/Consulta', {
                 method: 'POST',
@@ -147,7 +152,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 body: jsonData // Envía la userKey, filtro y consulta al servidor
             })
             .then(response => {
-                console.log(response);
                 if (response.ok) {
                     return response.json() // Devuelve los datos JSON de la respuesta
                 } else {
@@ -163,9 +167,49 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Para manejar los errores 
                 console.error('Error:', error);
             });
-        } else {
-            // Mostrar un mensaje de error si falta algún valor
-            console.error('Por favor ingrese un valor en el campo de texto y seleccione un filtro');
-        }
+        } 
     });
 });
+
+//Modales 
+// Función para mostrar el modal
+function mostrarModal(idModal) {
+    // Agregar clase 'active' al modal
+    document.getElementById(idModal).classList.add('active');
+}
+
+// Función para cerrar el modal
+function cerrarModal(idModal) {
+    // Quitar clase 'active' al modal
+    document.getElementById(idModal).classList.remove('active');
+}
+
+// Obtener elementos de los botones de cierre en los modales
+var closeModalButtons = document.querySelectorAll('.close');
+
+// Asignar eventos de clic a los botones de cierre en los modales
+closeModalButtons.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+        var modal = this.closest('.modal');
+        var modalId = modal.getAttribute('id');
+        cerrarModal(modalId);
+    });
+});
+
+// Asignar eventos de clic a los enlaces para abrir los modales
+document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click', function(event) {
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    mostrarModal('modalInsertarEmpleado');
+});
+
+document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click', function(event) {
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    mostrarModal('modalBorrarEmpleado');
+});
+
+document.getElementById('openModalLinkActualizarEmpleados').addEventListener('click', f)
+
+
+
+

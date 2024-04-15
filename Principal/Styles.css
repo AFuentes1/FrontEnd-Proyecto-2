@@ -110,3 +110,64 @@ nav ul li a:hover {
 .tabla th {
     background-color: #2f6e6b;
 }
+
+.wrapper#wrapperFiltro {
+    margin-bottom: 20px; /* Esto moverá el wrapperFiltro hacia arriba */
+}
+
+
+/* Estilos para ocultar los modales */
+.modal {
+    display: none;
+    position: fixed; /* Hace que el modal se posicione fijamente en la ventana del navegador */
+    top: 50%; /* Centra verticalmente el modal */
+    left: 50%; /* Centra horizontalmente el modal */
+    transform: translate(-50%, -50%); /* Centra el modal exactamente en el centro */
+    width: 80%; /* Ancho del modal */
+    max-width: 600px; /* Ancho máximo del modal */
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Estilos para hacer que el modal aparezca cuando se activa */
+.modal.active {
+    display: block;
+}
+
+/* Estilos para el botón de cierre en el modal */
+.close {
+    position: absolute; /* Posición absoluta en relación con su contenedor */
+    top: 10px; /* Distancia desde la parte superior del modal */
+    right: 10px; /* Distancia desde la parte derecha del modal */
+    cursor: pointer; /* Cambia el cursor a una mano cuando se pasa por encima */
+    font-size: 20px; /* Tamaño del icono de cierre */
+    color: #aaa; /* Color del icono de cierre */
+}
+
+.close:hover {
+    color: #000; /* Cambia el color del icono de cierre al pasar el cursor por encima */
+}
+
+/* Estilos para el fondo oscurecido */
+.modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    z-index: 999; /* Z-index para que el fondo esté por encima del contenido */
+}
+
+/* Estilos para deshabilitar eventos en el contenido principal mientras el modal está activo */
+.modal-open {
+    pointer-events: none; /* Deshabilita todos los eventos del ratón en el contenido principal */
+}
+
+/* Estilos para habilitar eventos en el modal mientras está activo */
+.modal.active {
+    display: block;
+}
+
