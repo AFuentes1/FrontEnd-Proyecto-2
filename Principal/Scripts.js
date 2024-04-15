@@ -229,6 +229,70 @@ closeModalButtons.forEach(function(button) {
 document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click', function(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
     mostrarModal('modalInsertarEmpleado');
+
+    // Obtener la userKey
+    var userKey = getCookie("userKey");
+    if (!userKey) {
+        console.log("No se encontró la userKey en la cookie");
+        return;
+    }
+
+    // Obtener referencias a los elementos del formulario
+    var documentoIdentidadSelect = document.getElementById('documentoIdentidad');
+    var nombreSelect = document.getElementById('nombre');
+    var idPuestoSelect = document.getElementById('idPuesto');
+    var botonSelect = document.getElementById('botonInsertar');
+    // Agregar evento de clic al botón de consulta dentro del modal
+    botonSelect.addEventListener('click', function() {
+        // Obtener el valor de idPuesto
+        var idPuesto = idPuestoSelect.value;
+        var documentoIdentidad = documentoIdentidadSelect.value;
+        var nombre = nombreSelect.value;
+
+        if (idPuesto || documentoIdentidad || nombre) {
+            // Crear objeto de datos a enviar al servidor
+            var formData = {
+                key: userKey,
+                docID: documentoIdentidad,
+                nombre: nombre,
+                idPuesto: idPuesto,
+            };
+
+
+            var jsonData = JSON.stringify(formData);
+
+            
+            // Enviar solicitud al API
+            fetch('https://localhost:7081/Insertar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+                },
+                body: jsonData // Envía la userKey, filtro y consulta al servidor
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json() // Devuelve los datos JSON de la respuesta
+                } else {
+                    throw new Error('La respuesta del servidor no es válida');
+                }
+            })
+            .then(data => {
+                // Llamar a la función para mostrar la tabla con los datos recibidos de la API
+                console.log(data);
+                mostrarTabla(data);
+            })
+            .catch(error => {
+                // Para manejar los errores 
+                console.error('Error:', error);
+            });
+            console.log(jsonData);
+        }
+
+        
+        
+        // Aquí puedes realizar las operaciones necesarias con idPuestoValue
+    });
 });
 
 document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click', function(event) {
