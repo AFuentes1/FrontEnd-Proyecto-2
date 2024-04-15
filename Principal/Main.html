@@ -42,7 +42,34 @@
     <div id="modalInsertarEmpleado" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p>Contenido del modal Insertar Empleado</p>
+            <h2>Insertar Empleado</h2>
+            <form id="insertarEmpleadoForm">
+                <label for="documentoIdentidad">Documento de Identidad:</label>
+                <input type="text" id="documentoIdentidad" name="documentoIdentidad" required>
+                <br>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <br>
+                <label for="idPuesto">ID del Puesto:</label>
+                <select id="idPuesto" name="idPuesto" required>
+                    <option value="">Seleccione un puesto</option>
+                    <option value="Cajero">Cajero</option>
+                    <option value="Camarero">Cajero</option>
+                    <option value="Cuidador">Cuidador</option>
+                    <option value="Conductor">Conductor</option>
+                    <option value="Asistente">Asistente</option>
+                    <option value="Recepcionista">Recepcionista</option>
+                    <option value="Fontanero">Fontanero</option>
+                    <option value="Niñera">Niñera</option>
+                    <option value="Conserje">Conserje</option>
+                    <option value="Albañil">Albañil</option>
+
+
+                    <!-- Agrega más opciones según tus necesidades -->
+                </select>
+                <br>
+                <input type="submit" value="Insertar">
+            </form>
         </div>
     </div>
 
@@ -66,7 +93,8 @@
             <p>Contenido del modal Movimientos</p>
         </div>
     </div>
-
+    
+    <div class="overlay"></div> <!-- Elemento de superposición -->
     
 
     <script src="Scripts.js"></script>

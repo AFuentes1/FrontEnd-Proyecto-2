@@ -174,14 +174,42 @@ document.addEventListener("DOMContentLoaded", function() {
 //Modales 
 // Función para mostrar el modal
 function mostrarModal(idModal) {
+    // Cerrar todos los modales abiertos
+    cerrarTodosModales();
     // Agregar clase 'active' al modal
     document.getElementById(idModal).classList.add('active');
+    // Agregar clase 'modal-open' al body
+    document.body.classList.add('modal-open');
+    // Deshabilitar todos los enlaces
+    deshabilitarEnlaces(true);
 }
 
+// Función para cerrar todos los modales
+function cerrarTodosModales() {
+    var modales = document.querySelectorAll('.modal.active');
+    modales.forEach(function(modal) {
+        modal.classList.remove('active');
+    });
+    // Quitar clase 'modal-open' del body
+    document.body.classList.remove('modal-open');
+    // Habilitar todos los enlaces
+    deshabilitarEnlaces(false);
+}
+// Función para habilitar o deshabilitar todos los enlaces
+function deshabilitarEnlaces(deshabilitar) {
+    var enlaces = document.querySelectorAll('nav a');
+    enlaces.forEach(function(enlace) {
+        enlace.disabled = deshabilitar;
+    });
+}
 // Función para cerrar el modal
 function cerrarModal(idModal) {
     // Quitar clase 'active' al modal
     document.getElementById(idModal).classList.remove('active');
+    // Quitar clase 'modal-open' del body solo si no hay otros modales abiertos
+    if (!document.querySelector('.modal.active')) {
+        document.body.classList.remove('modal-open');
+    }
 }
 
 // Obtener elementos de los botones de cierre en los modales
@@ -205,11 +233,18 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
 
 document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click', function(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
-    mostrarModal('modalBorrarEmpleado');
+    mostrarModal('modalBorrarEmpleado'); 
 });
 
-document.getElementById('openModalLinkActualizarEmpleados').addEventListener('click', f)
+document.getElementById('openModalLinkActualizarEmpleados').addEventListener('click', function(event) {
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    mostrarModal('modalActualizarEmpleados');
+});
 
+document.getElementById('openModalLinkMovimientos').addEventListener('click', function(event) {
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    mostrarModal('modalMovimientos');
+});
 
 
 

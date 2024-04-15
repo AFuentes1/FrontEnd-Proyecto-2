@@ -117,18 +117,21 @@ nav ul li a:hover {
 
 
 /* Estilos para ocultar los modales */
+/* Estilos para los modales */
 .modal {
+    background: rgb(142, 195, 188); /* Color oscuro con opacidad del 50% */
+    border: 2px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
     display: none;
-    position: fixed; /* Hace que el modal se posicione fijamente en la ventana del navegador */
-    top: 50%; /* Centra verticalmente el modal */
-    left: 50%; /* Centra horizontalmente el modal */
-    transform: translate(-50%, -50%); /* Centra el modal exactamente en el centro */
-    width: 80%; /* Ancho del modal */
-    max-width: 600px; /* Ancho máximo del modal */
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
 /* Estilos para hacer que el modal aparezca cuando se activa */
@@ -136,38 +139,89 @@ nav ul li a:hover {
     display: block;
 }
 
-/* Estilos para el botón de cierre en el modal */
-.close {
-    position: absolute; /* Posición absoluta en relación con su contenedor */
-    top: 10px; /* Distancia desde la parte superior del modal */
-    right: 10px; /* Distancia desde la parte derecha del modal */
-    cursor: pointer; /* Cambia el cursor a una mano cuando se pasa por encima */
-    font-size: 20px; /* Tamaño del icono de cierre */
-    color: #aaa; /* Color del icono de cierre */
-}
 
-.close:hover {
-    color: #000; /* Cambia el color del icono de cierre al pasar el cursor por encima */
-}
 
 /* Estilos para el fondo oscurecido */
-.modal-background {
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
-    z-index: 999; /* Z-index para que el fondo esté por encima del contenido */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente oscuro */
+    z-index: 998; /* Coloca el overlay detrás del modal */
+    display: none; /* Inicialmente oculto */
 }
 
-/* Estilos para deshabilitar eventos en el contenido principal mientras el modal está activo */
-.modal-open {
-    pointer-events: none; /* Deshabilita todos los eventos del ratón en el contenido principal */
-}
-
-/* Estilos para habilitar eventos en el modal mientras está activo */
-.modal.active {
+/* Estilos para mostrar el overlay cuando el modal está activo */
+body.modal-open .overlay {
     display: block;
 }
 
+/* Estilos para deshabilitar eventos de ratón en el contenido principal mientras el modal está activo */
+body.modal-open {
+    overflow: hidden; /* Evita que el contenido principal se desplace */
+}
+
+body.modal-open nav a {
+    pointer-events: none; /* Deshabilita eventos de ratón en los enlaces */
+    cursor: not-allowed; /* Cambia el cursor a "no permitido" */
+    opacity: 0.9; /* Reduce la opacidad para indicar que los enlaces están deshabilitados */
+}
+
+/* Estilos para el contenido del modal */
+.modal-content {
+    background-color: #7a9fd0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Estilos para el título del formulario */
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Estilos para las etiquetas de los campos */
+.modal-content label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* Estilos para los campos de entrada */
+.modal-content input[type="text"],
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+/* Estilos para el botón de envío */
+.modal-content input[type="submit"] {
+    background-color: #7d4caf;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Estilos para el botón de cierre */
+.modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 27px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+/* Estilos para el botón de cierre al pasar el cursor */
+.modal-content .close:hover {
+    color: #333;
+}
