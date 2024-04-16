@@ -240,30 +240,53 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
     // Obtener referencias a los elementos del formulario
     var documentoIdentidadSelect = document.getElementById('documentoIdentidad');
     var nombreSelect = document.getElementById('nombre');
-    var idPuestoSelect = document.getElementById('idPuesto');
+    var nombrePuestoSelect = document.getElementById('idPuesto');
     var botonSelect = document.getElementById('botonInsertar');
-    // Agregar evento de clic al botón de consulta dentro del modal
-    botonSelect.addEventListener('click', function() {
+    
+    // Cambio en el tipo del botón de inserción
+    botonSelect.type = 'button'; // Cambio del tipo a 'button'
+
+    // Agregar evento de clic al botón de inserción dentro del modal
+    botonSelect.addEventListener('click', function(event) {
+        // Evitar que el evento se propague al modal y lo cierre
+        event.stopPropagation();
+
         // Obtener el valor de idPuesto
-        var idPuesto = idPuestoSelect.value;
+        var nombrePuesto = nombrePuestoSelect.value.toString();
         var documentoIdentidad = documentoIdentidadSelect.value;
         var nombre = nombreSelect.value;
 
-        if (idPuesto || documentoIdentidad || nombre) {
+        if (nombrePuesto && documentoIdentidad && nombre) {
             // Crear objeto de datos a enviar al servidor
             var formData = {
                 key: userKey,
                 docID: documentoIdentidad,
                 nombre: nombre,
-                idPuesto: idPuesto,
+                nombrePuesto: nombrePuesto
             };
-
 
             var jsonData = JSON.stringify(formData);
 
-            
             // Enviar solicitud al API
             fetch('https://localhost:7081/Insertar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+                },
+                body: jsonData // Envía la userKey, filtro y consulta al servidor
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Devuelve los datos JSON de la respuesta
+                } else {
+                    throw new Error('La respuesta del servidor no es válida');
+                }
+            })
+            .then(data => {
+                // Llamar a la función para mostrar la tabla con los datos recibidos de la API
+                //mostrarTabla(data);
+                // Cerrar el modal después de insertar los datos
+                fetch('https://localhost:7081/Consulta', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
@@ -286,14 +309,20 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
                 // Para manejar los errores 
                 console.error('Error:', error);
             });
-            console.log(jsonData);
+                cerrarModal('modalInsertarEmpleado');
+            })
+            .catch(error => {
+                // Para manejar los errores 
+                console.error('Error:', error);
+            });
         }
-
-        
-        
-        // Aquí puedes realizar las operaciones necesarias con idPuestoValue
     });
 });
+
+
+
+
+
 
 document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click', function(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del enlace

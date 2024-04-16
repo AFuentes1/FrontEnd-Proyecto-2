@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 *{
-    margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "poppins", sans-serif;
@@ -112,9 +111,11 @@ nav ul li a:hover {
 }
 
 .wrapper#wrapperFiltro {
-    margin-bottom: 20px; /* Esto moverá el wrapperFiltro hacia arriba */
+    margin-top: 10px; /* Ajusta el margen superior según sea necesario */
+    position: absolute;
+    top: calc(10% + 20px); /* Coloca el wrapperFiltro 20px por debajo del nav */
+    width: 90%;
 }
-
 
 /* Estilos para ocultar los modales */
 /* Estilos para los modales */
