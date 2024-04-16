@@ -319,15 +319,162 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
     });
 });
 
+//MODAL BORRAR
+// Función para abrir el modal y mostrar los datos
+var datosObtenidos;
+function mostrarModalConDatosBorrar() {
+    // Abrir el modal de confirmación
+    mostrarModal('modalConfirmacionBorrarEmpleado');
 
+    // Mostrar los datos en el modal
+    console.log(datosObtenidos);
+    var persona = datosObtenidos.Persona;
+    var datosPersonaDiv = document.getElementById('datosPersona');
+    datosPersonaDiv.innerHTML = `
+        <p>Nombre: ${persona.nombre}</p>
+        <p>Documento de identidad: ${persona.documentoIdentidad}</p>
+        <p>Fecha de contratación: ${persona.fechaContratacion}</p>
+        <p>Saldo de vacaciones: ${persona.saldoVacaciones}</p>
 
+        <!-- Agregar más campos si es necesario -->
+    `;
+}
 
 
 
 document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click', function(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
     mostrarModal('modalBorrarEmpleado'); 
+
+    // Obtener la userKey
+    var userKey = getCookie("userKey");
+    if (!userKey) {
+        console.log("No se encontró la userKey en la cookie");
+        return;
+    }
+
+    // Obtener referencias a los elementos del formulario
+    var documentoIdentidadSelect = document.getElementById('documentoIdentidadBorrar');
+    var botonSelect = document.getElementById('botonSiguiente');
+
+    botonSelect.type = 'button'; // Cambio del tipo a 'button'
+
+    botonSelect.addEventListener('click', function(event) {
+        event.stopPropagation()
+
+        var documentoIdentidad = documentoIdentidadSelect.value;
+        
+        if (documentoIdentidad){
+            var formData = {
+                key: userKey,
+                docID: documentoIdentidad
+            };
+
+            var jsonData = JSON.stringify(formData);
+            console.log(jsonData);
+
+            //Se envia al API
+            fetch('https://localhost:7081/Delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+                },
+                body: jsonData // Envía la userKey, filtro y consulta al servidor
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Devuelve los datos JSON de la respuesta
+                } else {
+                    throw new Error('La respuesta del servidor no es válida');
+                }
+            })
+            .then(data => {
+                // Asignar los datos obtenidos a la variable
+                datosObtenidos = data;
+                mostrarModalConDatosBorrar();                
+            })
+            .catch(error => {
+                // Para manejar los errores 
+                console.error('Error:', error);
+            });
+              
+        }
+        
+        
+    });
+   
 });
+
+document.getElementById('confirmarBorrado').addEventListener('click', function(event) {
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    var userKey = getCookie("userKey");
+    if (!userKey) {
+        console.log("No se encontró la userKey en la cookie");
+        return;
+    }
+    var documentoIdentidadBorrar = datosObtenidos.Persona.documentoIdentidad;
+    var formData = {
+        key: userKey,
+        docID: documentoIdentidadBorrar
+    };
+    
+    var jsonData = JSON.stringify(formData);
+
+    //Se envia al API
+    fetch('https://localhost:7081/Delete/Confirm', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+        },
+        body: jsonData // Envía la userKey, filtro y consulta al servidor
+    })
+
+    .then(response => {
+        if (response.ok) {
+            return response.json(); // Devuelve los datos JSON de la respuesta
+        } else {
+            throw new Error('La respuesta del servidor no es válida');
+        }
+    })
+
+    .then(data => {
+        // Llamar a la función para mostrar la tabla con los datos recibidos de la API
+        //mostrarTabla(data);
+        // Cerrar el modal después de insertar los datos
+        fetch('https://localhost:7081/Consulta', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+        },
+        body: jsonData // Envía la userKey, filtro y consulta al servidor
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json() // Devuelve los datos JSON de la respuesta
+        } else {
+            throw new Error('La respuesta del servidor no es válida');
+        }
+    })
+    .then(data => {
+        // Llamar a la función para mostrar la tabla con los datos recibidos de la API
+        console.log(data);
+        mostrarTabla(data);
+    })
+    .catch(error => {
+        // Para manejar los errores 
+        console.error('Error:', error);
+    });
+        cerrarModal('modalConfirmacionBorrarEmpleado');
+    })
+    .catch(error => {
+        // Para manejar los errores 
+        console.error('Error:', error);
+    });
+
+});
+
+
+//MODAL ACTUALIZAR Empleados
 
 document.getElementById('openModalLinkActualizarEmpleados').addEventListener('click', function(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del enlace

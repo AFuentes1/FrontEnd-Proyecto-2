@@ -75,7 +75,25 @@
     <div id="modalBorrarEmpleado" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p>Contenido del modal Borrar Empleado</p>
+            <h2>Borrar Empleado</h2>
+            <form id="borrarEmpleadoForm">
+                <label for="documentoIdentidad">Ingrese el Documento de Identidad:</label>
+                <input type="text" id="documentoIdentidadBorrar" name="documentoIdentidad" required>
+                <br>
+                <button id="botonSiguiente" type="button">Siguiente</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalConfirmacionBorrarEmpleado" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmación de borrado</h2>
+            <h4>¿Estás seguro de que deseas borrar el siguiente empleado?</h4>
+            <div id="datosPersona">
+                <!-- Aquí se mostrarán los datos de la persona -->
+            </div>
+            <button id="confirmarBorrado">Confirmar</button>
         </div>
     </div>
 
