@@ -1,42 +1,47 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Leer la cookie para obtener userKey
-    var userKey = getCookie("userKey");
+    try {
+        var userKey = getCookie("userKey");
 
-    // Verificar si la userKey está presente
-    if (!userKey) {
-        // La userKey no está presente, probablemente el usuario no ha iniciado sesión
-        // Puedes redirigir al usuario a la página de inicio de sesión u otra acción adecuada aquí
-        return;
-    }
-    var formData = {
-        key: userKey
-    }
-
-    var jsonData = JSON.stringify(formData);
-    // Simplemente hacemos una solicitud GET a la API para obtener la lista de empleados
-    fetch('https://localhost:7081/Consulta', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
-        },
-        body: jsonData // Envía la userKey al servidor
-    })
-    .then(response => {
-        console.log(response);
-        if (response.ok) {
-            return response.json() // Devuelve los datos JSON de la respuesta
-        } else {
-            throw new Error('La respuesta del servidor no es válida');
+        // Verificar si la userKey está presente
+        if (!userKey) {
+            // La userKey no está presente, probablemente el usuario no ha iniciado sesión
+            // Puedes redirigir al usuario a la página de inicio de sesión u otra acción adecuada aquí
+            return;
         }
-    })
-    .then(data => {
-        // Llamar a la función para mostrar la tabla con los datos recibidos de la API
-        mostrarTabla(data);
-    })
-    .catch(error => {
-        // Para manejar los errores 
-        console.error('Error:', error);
-    });
+        var formData = {
+            key: userKey
+        }
+    
+        var jsonData = JSON.stringify(formData);
+        // Simplemente hacemos una solicitud GET a la API para obtener la lista de empleados
+        fetch('https://localhost:7081/Consulta', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+            },
+            body: jsonData // Envía la userKey al servidor
+        })
+        .then(response => {
+            console.log(response);
+            if (response.ok) {
+                return response.json() // Devuelve los datos JSON de la respuesta
+            } else {
+                throw new Error('La respuesta del servidor no es válida');
+            }
+        })
+        .then(data => {
+            // Llamar a la función para mostrar la tabla con los datos recibidos de la API
+            mostrarTabla(data);
+        })
+        .catch(error => {
+            // Para manejar los errores 
+            console.error('Error:', error);
+        });
+
+    } catch (error) {
+        alert("Error al cargar la página, por favor intente de nuevo más tarde");
+    }
 });
 
 // Función para obtener el valor de una cookie por su nombre
@@ -65,25 +70,31 @@ function mostrarTabla(data) {
     const table = document.createElement('table');
     table.classList.add('tabla');
 
-    // Crear el encabezado de la tabla
+    // Crear el encabezado de la tabla excluyendo la primera y la cuarta columna
     const headerRow = document.createElement('tr');
-    for (let key in data.Lista[0]) {
-        const th = document.createElement('th');
-        th.textContent = key;
-        headerRow.appendChild(th);
+    const keys = Object.keys(data.Lista[0]);
+    for (let i = 0; i < keys.length; i++) {
+        if (i !== 0 && i !== 3) { // Excluir la primera columna (i=0) y la cuarta columna (i=3)
+            const th = document.createElement('th');
+            th.textContent = keys[i];
+            headerRow.appendChild(th);
+        }
     }
     table.appendChild(headerRow);
 
-    // Crear las filas de la tabla con los datos
+    // Crear las filas de la tabla con los datos excluyendo la primera y la cuarta columna
     data.Lista.forEach(item => {
         const row = document.createElement('tr');
-        for (let key in item) {
-            const cell = document.createElement('td');
-            cell.textContent = item[key];
-            row.appendChild(cell);
+        const values = Object.values(item);
+        for (let i = 0; i < values.length; i++) {
+            if (i !== 0 && i !== 3) { // Excluir la primera columna (i=0) y la cuarta columna (i=3)
+                const cell = document.createElement('td');
+                cell.textContent = values[i];
+                row.appendChild(cell);
+            }
         }
         table.appendChild(row);
-});
+    });
 
     // Limpiar el contenido previo del contenedor
     dataContainer.innerHTML = '';
@@ -92,9 +103,75 @@ function mostrarTabla(data) {
     dataContainer.appendChild(table);
 }
 
+//Mostrar Movimientos 
+/*
+function mostrarModalConMovimientos(data) {
+    // Abrir el modal de movimientos
+    mostrarModal('modalImprimirMovimientos');
+
+    // Mostrar los datos en el modal
+    const modalContainer = document.getElementById('modalImprimirMovimientos');
+    
+    // Crear la tabla
+    const table = document.createElement('table');
+    table.classList.add('tabla');
+
+    // Crear el encabezado de la tabla con todas las columnas disponibles
+    const headerRow = document.createElement('tr');
+    for (let key in data) {
+        const th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+    }
+    table.appendChild(headerRow);
+
+    // Crear la fila de datos
+    const row = document.createElement('tr');
+    for (let key in data) {
+        const cell = document.createElement('td');
+        cell.textContent = data[key];
+        row.appendChild(cell);
+    }
+    table.appendChild(row);
+
+    // Limpiar el contenido previo del modal
+    modalContainer.innerHTML = '';
+
+    // Agregar la tabla al modal
+    modalContainer.appendChild(table);
+
+    // Crear el botón de cierre
+    const closeButton = document.createElement('span');
+    closeButton.classList.add('close');
+    closeButton.innerHTML = '&times;';
+
+    // Agregar el botón de cierre al modal
+    const modalContent = modalContainer.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.appendChild(closeButton);
+    } else {
+        console.error('No se encontró ningún elemento con la clase modal-content dentro de modalContainer');
+    }
+    
+    // Obtener el botón de cerrar y cerrar el modal cuando se hace clic en él
+    closeButton.addEventListener('click', function() {
+        modalContainer.style.display = 'none';
+    });
+
+    // Cerrar el modal cuando se hace clic fuera de él
+    window.addEventListener('click', function(event) {
+        if (event.target == modalContainer) {
+            modalContainer.style.display = 'none';
+        }
+    });
+}
+*/
+
+
 //BOTON Consulta
 document.addEventListener("DOMContentLoaded", function() {
-    // Leer la cookie para obtener userKey
+    try {
+        // Leer la cookie para obtener userKey
     var userKey = getCookie("userKey");
     // Verificar si la userKey está presente
     if (!userKey) {
@@ -166,6 +243,10 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         } 
     });
+    } catch (error) {
+        alert("Error al cargar la página, por favor intente de nuevo más tarde");
+    }
+    
 });
 
 //Modales 
@@ -227,7 +308,8 @@ closeModalButtons.forEach(function(button) {
 
 // Asignar eventos de clic a los enlaces para abrir los modales
 document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click', function(event) {
-    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    try {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
     mostrarModal('modalInsertarEmpleado');
 
     // Obtener la userKey
@@ -315,6 +397,9 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
             });
         }
     });
+    } catch (error) {
+        alert("Error al cargar la página, por favor intente de nuevo más tarde");
+    }
 });
 
 
@@ -346,17 +431,110 @@ function mostrarModalConDatosActualizar() {
     // Mostrar los datos en el modal
    
     var persona = datosObtenidosActualizar.Persona;
-    console.log(persona);
     document.getElementById('documentoIdentidadActualizar2').value = persona.documentoIdentidad;
     document.getElementById('nombreActualizar').value = persona.nombre;
     document.getElementById('nombrePuesto').value = persona.nombrePuesto
     
 }
 
+function mostrarModalConMovimientos(data) {
+    // Abrir el modal de movimientos
+    mostrarModal('modalImprimirMovimientos');
+
+    // Mostrar los datos en el modal
+    const modalContainer = document.getElementById('modalImprimirMovimientos');
+
+    // Crear el botón de cierre
+    const closeButton = document.createElement('span');
+    closeButton.classList.add('close');
+    closeButton.innerHTML = '&times;';
+
+    // Agregar el botón de cierre al modal
+    modalContainer.appendChild(closeButton);
+
+    // Obtener el botón de cerrar y cerrar el modal cuando se hace clic en él
+    closeButton.addEventListener('click', function() {
+        cerrarModal('modalImprimirMovimientos');
+    });
+
+    // Cerrar el modal cuando se hace clic fuera de él
+    window.addEventListener('click', function(event) {
+        if (event.target == modalContainer) {
+            cerrarModal('modalImprimirMovimientos');
+        }
+    });
+
+    // Obtener la tabla que creaste anteriormente
+    
+    const table = crearTablaMovimiento(data.Lista[0]);
+
+    // Limpiar el contenido previo del modal
+    modalContainer.innerHTML = '';
+
+    // Agregar la tabla al modal
+    modalContainer.appendChild(table);
+}
+
+// Función para generar la tabla de movimientos con los datos recibidos
+function crearTablaMovimiento(data) {
+    // Crear la tabla
+    const table = document.createElement('table');
+    table.classList.add('tabla');
+
+    // Crear el encabezado de la tabla con todas las columnas disponibles
+    const headerRow = document.createElement('tr');
+    for (let key in data) {
+        const th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+    }
+    table.appendChild(headerRow);
+
+    // Crear la fila de datos
+    const row = document.createElement('tr');
+    for (let key in data) {
+        const cell = document.createElement('td');
+        cell.textContent = data[key];
+        row.appendChild(cell);
+    }
+    table.appendChild(row);
+
+    return table;
+}
+
+
+
+// Función para generar la tabla con los datos recibidos
+function crearTablaMovimiento(data) {
+    // Crear la tabla
+    const table = document.createElement('table');
+    table.classList.add('tabla');
+
+    // Crear el encabezado de la tabla con todas las columnas disponibles
+    const headerRow = document.createElement('tr');
+    for (let key in data) {
+        const th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+    }
+    table.appendChild(headerRow);
+
+    // Crear la fila de datos
+    const row = document.createElement('tr');
+    for (let key in data) {
+        const cell = document.createElement('td');
+        cell.textContent = data[key];
+        row.appendChild(cell);
+    }
+    table.appendChild(row);
+
+    return table;
+}
 
 
 document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click', function(event) {
-    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    try {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
     mostrarModal('modalBorrarEmpleado'); 
 
     // Obtener la userKey
@@ -422,11 +600,15 @@ document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click',
         
         
     });
+    } catch (error) {
+        alert("Error al cargar la página, por favor intente de nuevo más tarde");
+    }
    
 });
 
 document.getElementById('confirmarBorrado').addEventListener('click', function(event) {
-    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    try {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
     var userKey = getCookie("userKey");
     if (!userKey) {
         console.log("No se encontró la userKey en la cookie");
@@ -490,12 +672,16 @@ document.getElementById('confirmarBorrado').addEventListener('click', function(e
         console.error('Error:', error);
     });
     cerrarModal('modalConfirmacionBorrarEmpleado');
+    } catch (error) {
+        alert("Error al cargar la página, por favor intente de nuevo más tarde");
+    }
 });
 
 
 //MODAL ACTUALIZAR Empleados
 document.getElementById('openModalLinkActualizarEmpleados').addEventListener('click', function(event) {
-    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    try {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
     mostrarModal('modalActualizarEmpleado');
     //obtener la userKey
     var userKey = getCookie("userKey");
@@ -522,6 +708,7 @@ document.getElementById('openModalLinkActualizarEmpleados').addEventListener('cl
             };
 
             var jsonData = JSON.stringify(formData);
+            console.log(jsonData);
 
             //Se envia al API
             fetch('https://localhost:7081/Update', {
@@ -541,7 +728,7 @@ document.getElementById('openModalLinkActualizarEmpleados').addEventListener('cl
             
             .then(data => {
                 // Asignar los datos obtenidos a la variable
-                if (data.Status === 0){
+                if (data.Status == 0){
                     datosObtenidosActualizar = data;
                     mostrarModalConDatosActualizar(); 
                     
@@ -557,10 +744,14 @@ document.getElementById('openModalLinkActualizarEmpleados').addEventListener('cl
               
         }
     });
+    } catch (error) {
+        alert("Error al cargar la página, por favor intente de nuevo más tarde");
+    }
 });
 
 document.getElementById('botonConfirmarActualizar').addEventListener('click', function(event) {
-    event.preventDefault();
+    try {
+        event.preventDefault();
 
     var userKey = getCookie("userKey");
     if (!userKey) {
@@ -568,20 +759,20 @@ document.getElementById('botonConfirmarActualizar').addEventListener('click', fu
         return;
     }
 
-    var documentoIndentidadSelect = document.getElementById('documentoIdentidad').value;
+    var documentoIndentidadSelect = document.getElementById('documentoIdentidadActualizar2').value;
     var nombreSelect = document.getElementById('nombreActualizar').value;
     var nombrePuestoSelect = document.getElementById('nombrePuesto').value.toString();
-    var botonSelect = document.getElementById('botonConfirmarActualizar');
+    var ultimoDocID = datosObtenidosActualizar.Persona.documentoIdentidad;
+    console.log(documentoIndentidadSelect);
 
     var formData = {
         key: userKey,
         docID: documentoIndentidadSelect,
         nombre: nombreSelect,
         nombrePuesto: nombrePuestoSelect,
-        tagetDocID: datosObtenidosActualizar.Persona.documentoIdentidad
+        tagetDocID: ultimoDocID
     };
     var jsonData = JSON.stringify(formData);
-    console.log(jsonData);
 
     //Se envia al API
     fetch('https://localhost:7081/Update/Confirm', {
@@ -631,6 +822,9 @@ document.getElementById('botonConfirmarActualizar').addEventListener('click', fu
         console.error('Error:', error);
     });
     cerrarModal('modalConfirmacionActualizarEmpleado');
+    } catch (error) {
+        alert("Error al cargar la página, por favor intente de nuevo más tarde");
+    }
 });
 
 
@@ -638,6 +832,64 @@ document.getElementById('botonConfirmarActualizar').addEventListener('click', fu
 document.getElementById('openModalLinkMovimientos').addEventListener('click', function(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
     mostrarModal('modalMovimientos');
+    var userKey = getCookie("userKey");
+    if (!userKey) {
+        console.log("No se encontró la userKey en la cookie");
+        return;
+    }
+    
+    // Obtener referencias a los elementos del formulario
+    var documentoIdentidadSelect = document.getElementById('documentoIdentidadMovimientos');
+    var botonSelect = document.getElementById('botonConsultarMovimientos');
+
+    botonSelect.type = 'button'; // Cambio del tipo a 'button'
+
+    botonSelect.addEventListener('click', function(event) {
+        event.stopPropagation()
+
+        var documentoIdentidad = documentoIdentidadSelect.value;
+
+        if (documentoIdentidad){
+            var formData = {
+                key: userKey,
+                DocIdIn: documentoIdentidad
+            };
+
+            var jsonData = JSON.stringify(formData);
+
+            //Se envia al API
+            fetch('https://localhost:7081/Movements', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+                },
+                body: jsonData // Envía la userKey, filtro y consulta al servidor
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Devuelve los datos JSON de la respuesta
+                } else {
+                    throw new Error('La respuesta del servidor no es válida');
+                }
+            })
+            
+            .then(data => {
+                // Asignar los datos obtenidos a la variable
+                console.log(data)
+                if (data.Status == 0){
+                    mostrarModalConMovimientos(data)
+                } else{
+                    alert("No se encontró el empleado con el documento de identidad ingresado")
+                }
+                               
+            })
+            .catch(error => {
+                // Para manejar los errores 
+                console.error('Error:', error);
+            });
+              
+        }
+    });
 });
 
 

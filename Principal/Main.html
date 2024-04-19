@@ -147,12 +147,24 @@
     </div>
 
     <div id="modalMovimientos" class="modal">
-        <div class="modal-content">
+        <div class = "modal-content">
             <span class="close">&times;</span>
-            <h2>Movimientos Empleados</h2>
-            
+            <h2>Movimientos</h2>
+            <form id="movimientosForm">
+                <label for="documentoIdentidad">Ingrese el Documento de Identidad:</label>
+                <input type="text" id="documentoIdentidadMovimientos" name="documentoIdentidad" required>
+                <br>
+                <button id="botonConsultarMovimientos">Consultar</button>
             </form>
         </div>
+    </div>
+
+    <div id="modalImprimirMovimientos" class="modal">
+        <div class = "modal-content">
+            <span class="close">&times;</span>
+            <h2>Movimientos</h2>
+        </div>
+        <button id = "botonSalirMovientos">Salir</button>
     </div>
     
     
