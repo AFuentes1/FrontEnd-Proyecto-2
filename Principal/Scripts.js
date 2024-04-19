@@ -349,19 +349,8 @@ function mostrarModalConDatosActualizar() {
     console.log(persona);
     document.getElementById('documentoIdentidadActualizar2').value = persona.documentoIdentidad;
     document.getElementById('nombreActualizar').value = persona.nombre;
-    document.getElementById('nombrePuestoActualizar').value = persona.nombrePuesto
-    document.getElementById('fechaDeContratacionActualizar').value = persona.fechaContratacion;
-    document.getElementById('saldoVacacionesActualizar').value = persona.saldoVacaciones;
-
-    var datosPersonaDiv = document.getElementById('datosPersona');
-    datosPersonaDiv.innerHTML = `
-        <p>Nombre: ${persona.nombre}</p>
-        <p>Documento de identidad: ${persona.documentoIdentidad}</p>
-        <p>Fecha de contratación: ${persona.fechaContratacion}</p>
-        <p>Saldo de vacaciones: ${persona.saldoVacaciones}</p>
-
-        <!-- Agregar más campos si es necesario -->
-    `;
+    document.getElementById('nombrePuesto').value = persona.nombrePuesto
+    
 }
 
 
@@ -579,12 +568,20 @@ document.getElementById('botonConfirmarActualizar').addEventListener('click', fu
         return;
     }
 
-    var documentoIdentidadActualizar1 = datosObtenidosActualizar.Persona.documentoIdentidad;
+    var documentoIndentidadSelect = document.getElementById('documentoIdentidad').value;
+    var nombreSelect = document.getElementById('nombreActualizar').value;
+    var nombrePuestoSelect = document.getElementById('nombrePuesto').value.toString();
+    var botonSelect = document.getElementById('botonConfirmarActualizar');
+
     var formData = {
         key: userKey,
-        docID: documentoIdentidadActualizar1
+        docID: documentoIndentidadSelect,
+        nombre: nombreSelect,
+        nombrePuesto: nombrePuestoSelect,
+        tagetDocID: datosObtenidosActualizar.Persona.documentoIdentidad
     };
     var jsonData = JSON.stringify(formData);
+    console.log(jsonData);
 
     //Se envia al API
     fetch('https://localhost:7081/Update/Confirm', {
