@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // Verificar si la userKey está presente
     if (!userKey) {
         // La userKey no está presente, probablemente el usuario no ha iniciado sesión
-        console.log("No se encontró la userKey en la cookie");
         // Puedes redirigir al usuario a la página de inicio de sesión u otra acción adecuada aquí
         return;
     }
@@ -142,7 +141,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             var jsonData = JSON.stringify(formData);
-            console.log(jsonData);
             // Enviar solicitud al API
             fetch('https://localhost:7081/Consulta', {
                 method: 'POST',
@@ -160,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(data => {
                 // Llamar a la función para mostrar la tabla con los datos recibidos de la API
-                console.log(data);
                 mostrarTabla(data);
             })
             .catch(error => {
@@ -193,6 +190,9 @@ function cerrarTodosModales() {
     // Quitar clase 'modal-open' del body
     document.body.classList.remove('modal-open');
     // Habilitar todos los enlaces
+
+    cerrarModal('modalInsertarEmpleado'); // Reemplaza 'modalInsertarEmpleado' con el ID de tu modal
+
     deshabilitarEnlaces(false);
 }
 // Función para habilitar o deshabilitar todos los enlaces
@@ -283,10 +283,11 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
                 }
             })
             .then(data => {
-                // Llamar a la función para mostrar la tabla con los datos recibidos de la API
-                //mostrarTabla(data);
-                // Cerrar el modal después de insertar los datos
-                fetch('https://localhost:7081/Consulta', {
+              
+            // Llamar a la función para mostrar la tabla con los datos recibidos de la API
+            //mostrarTabla(data);
+            // Cerrar el modal después de insertar los datos
+            fetch('https://localhost:7081/Consulta', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
@@ -302,7 +303,6 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
             })
             .then(data => {
                 // Llamar a la función para mostrar la tabla con los datos recibidos de la API
-                console.log(data);
                 mostrarTabla(data);
             })
             .catch(error => {
@@ -310,14 +310,13 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
                 console.error('Error:', error);
             });
                 cerrarModal('modalInsertarEmpleado');
-            })
-            .catch(error => {
-                // Para manejar los errores 
-                console.error('Error:', error);
+                    
+
             });
         }
     });
 });
+
 
 //MODAL BORRAR
 // Función para abrir el modal y mostrar los datos
@@ -327,8 +326,33 @@ function mostrarModalConDatosBorrar() {
     mostrarModal('modalConfirmacionBorrarEmpleado');
 
     // Mostrar los datos en el modal
-    console.log(datosObtenidos);
     var persona = datosObtenidos.Persona;
+    var datosPersonaDiv = document.getElementById('datosPersona');
+    datosPersonaDiv.innerHTML = `
+        <p>Nombre: ${persona.nombre}</p>
+        <p>Documento de identidad: ${persona.documentoIdentidad}</p>
+        <p>Fecha de contratación: ${persona.fechaContratacion}</p>
+        <p>Saldo de vacaciones: ${persona.saldoVacaciones}</p>
+
+        <!-- Agregar más campos si es necesario -->
+    `;
+}
+
+var datosObtenidosActualizar;
+function mostrarModalConDatosActualizar() {
+    // Abrir el modal de confirmación
+    mostrarModal('modalConfirmacionActualizarEmpleado');
+
+    // Mostrar los datos en el modal
+   
+    var persona = datosObtenidosActualizar.Persona;
+    console.log(persona);
+    document.getElementById('documentoIdentidadActualizar2').value = persona.documentoIdentidad;
+    document.getElementById('nombreActualizar').value = persona.nombre;
+    document.getElementById('nombrePuestoActualizar').value = persona.nombrePuesto
+    document.getElementById('fechaDeContratacionActualizar').value = persona.fechaContratacion;
+    document.getElementById('saldoVacacionesActualizar').value = persona.saldoVacaciones;
+
     var datosPersonaDiv = document.getElementById('datosPersona');
     datosPersonaDiv.innerHTML = `
         <p>Nombre: ${persona.nombre}</p>
@@ -371,7 +395,6 @@ document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click',
             };
 
             var jsonData = JSON.stringify(formData);
-            console.log(jsonData);
 
             //Se envia al API
             fetch('https://localhost:7081/Delete', {
@@ -388,10 +411,18 @@ document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click',
                     throw new Error('La respuesta del servidor no es válida');
                 }
             })
+            
             .then(data => {
                 // Asignar los datos obtenidos a la variable
-                datosObtenidos = data;
-                mostrarModalConDatosBorrar();                
+                console.log(data.Status)
+                if (data.Status === 0){
+                    datosObtenidos = data;
+                    mostrarModalConDatosBorrar(); 
+                    
+                } else{
+                    alert("No se encontró el empleado con el documento de identidad ingresado")
+                }
+                               
             })
             .catch(error => {
                 // Para manejar los errores 
@@ -441,7 +472,122 @@ document.getElementById('confirmarBorrado').addEventListener('click', function(e
         // Llamar a la función para mostrar la tabla con los datos recibidos de la API
         //mostrarTabla(data);
         // Cerrar el modal después de insertar los datos
-        fetch('https://localhost:7081/Consulta', {
+        return fetch('https://localhost:7081/Consulta', { // Aquí necesitas un return
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+            },
+            body: jsonData // Envía la userKey, filtro y consulta al servidor
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Devuelve los datos JSON de la respuesta
+            } else {
+                throw new Error('La respuesta del servidor no es válida');
+            }
+        })
+        .then(data => {
+            // Llamar a la función para mostrar la tabla con los datos recibidos de la API
+            mostrarTabla(data);
+        })
+        .catch(error => {
+            // Para manejar los errores 
+            console.error('Error:', error);
+            
+        });
+    })
+    .catch(error => {
+        // Para manejar los errores 
+        console.error('Error:', error);
+    });
+    cerrarModal('modalConfirmacionBorrarEmpleado');
+});
+
+
+//MODAL ACTUALIZAR Empleados
+document.getElementById('openModalLinkActualizarEmpleados').addEventListener('click', function(event) {
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    mostrarModal('modalActualizarEmpleado');
+    //obtener la userKey
+    var userKey = getCookie("userKey");
+    if (!userKey) {
+        console.log("No se encontró la userKey en la cookie");
+        return;
+    }
+
+    // Obtener referencias a los elementos del formulario
+    var documentoIdentidadSelect = document.getElementById('documentoIdentidadActualizar1');
+    var botonSelect = document.getElementById('botonSiguienteActualizar');
+
+    botonSelect.type = 'button'; // Cambio del tipo a 'button'
+
+    botonSelect.addEventListener('click', function(event) {
+        event.stopPropagation()
+
+        var documentoIdentidad = documentoIdentidadSelect.value;
+
+        if (documentoIdentidad){
+            var formData = {
+                key: userKey,
+                docID: documentoIdentidad
+            };
+
+            var jsonData = JSON.stringify(formData);
+
+            //Se envia al API
+            fetch('https://localhost:7081/Update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+                },
+                body: jsonData // Envía la userKey, filtro y consulta al servidor
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Devuelve los datos JSON de la respuesta
+                } else {
+                    throw new Error('La respuesta del servidor no es válida');
+                }
+            })
+            
+            .then(data => {
+                // Asignar los datos obtenidos a la variable
+                if (data.Status === 0){
+                    datosObtenidosActualizar = data;
+                    mostrarModalConDatosActualizar(); 
+                    
+                } else{
+                    alert("No se encontró el empleado con el documento de identidad ingresado")
+                }
+                               
+            })
+            .catch(error => {
+                // Para manejar los errores 
+                console.error('Error:', error);
+            });
+              
+        }
+    });
+});
+
+document.getElementById('botonConfirmarActualizar').addEventListener('click', function(event) {
+    event.preventDefault();
+
+    var userKey = getCookie("userKey");
+    if (!userKey) {
+        console.log("No se encontró la userKey en la cookie");
+        return;
+    }
+
+    var documentoIdentidadActualizar1 = datosObtenidosActualizar.Persona.documentoIdentidad;
+    var formData = {
+        key: userKey,
+        docID: documentoIdentidadActualizar1
+    };
+    var jsonData = JSON.stringify(formData);
+
+    //Se envia al API
+    fetch('https://localhost:7081/Update/Confirm', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
@@ -450,36 +596,47 @@ document.getElementById('confirmarBorrado').addEventListener('click', function(e
     })
     .then(response => {
         if (response.ok) {
-            return response.json() // Devuelve los datos JSON de la respuesta
+            return response.json(); // Devuelve los datos JSON de la respuesta
         } else {
             throw new Error('La respuesta del servidor no es válida');
         }
     })
     .then(data => {
         // Llamar a la función para mostrar la tabla con los datos recibidos de la API
-        console.log(data);
-        mostrarTabla(data);
+        //mostrarTabla(data);
+        // Cerrar el modal después de insertar los datos
+        return fetch('https://localhost:7081/Consulta', { // Aquí necesitas un return
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+            },
+            body: jsonData // Envía la userKey, filtro y consulta al servidor
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Devuelve los datos JSON de la respuesta
+            } else {
+                throw new Error('La respuesta del servidor no es válida');
+            }
+        })
+        .then(data => {
+            // Llamar a la función para mostrar la tabla con los datos recibidos de la API
+            mostrarTabla(data);
+        })
+        .catch(error => {
+            // Para manejar los errores 
+            console.error('Error:', error);
+            
+        });
     })
     .catch(error => {
         // Para manejar los errores 
         console.error('Error:', error);
     });
-        cerrarModal('modalConfirmacionBorrarEmpleado');
-    })
-    .catch(error => {
-        // Para manejar los errores 
-        console.error('Error:', error);
-    });
-
+    cerrarModal('modalConfirmacionActualizarEmpleado');
 });
 
 
-//MODAL ACTUALIZAR Empleados
-
-document.getElementById('openModalLinkActualizarEmpleados').addEventListener('click', function(event) {
-    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
-    mostrarModal('modalActualizarEmpleados');
-});
 
 document.getElementById('openModalLinkMovimientos').addEventListener('click', function(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del enlace

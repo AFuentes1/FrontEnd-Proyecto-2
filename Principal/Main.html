@@ -37,6 +37,8 @@
             <!-- Aquí se mostrará la tabla dinámica -->
         </div>
     </div>
+    
+    <div class="overlay"></div> <!-- Elemento de superposición -->
 
     <!-- Modales -->
     <div id="modalInsertarEmpleado" class="modal">
@@ -97,21 +99,67 @@
         </div>
     </div>
 
-    <div id="modalActualizarEmpleados" class="modal">
+    <div id="modalActualizarEmpleado" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p>Contenido del modal Actualizar Empleados</p>
+            <h2>Actualizar Empleados</h2>
+            <form id = "actualizarEmpleadoForm">
+                <label for="documentoIdentidad">Documento de Identidad:</label>
+                <input type="text" id="documentoIdentidadActualizar1" name="documentoIdentidad" required>
+                <br>
+                <button id="botonSiguienteActualizar" type="button">Siguiente</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalConfirmacionActualizarEmpleado" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Actualizar Empleado</h2>
+            <form id="actualizarEmpleadoForm">
+                <label for="documentoIdentidad">Documento de Identidad:</label>
+                <input type="text" id="documentoIdentidadActualizar2" name="documentoIdentidad" required>
+                <br>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombreActualizar" name="nombre" required>
+                <br>
+                <label for="nombrePuesto">ID del Puesto:</label>
+                <select id="nombrePuestoActualizar" name="nombrePuesto" required>
+                    <option value="">Seleccione un puesto</option>
+                    <option value="Cajero">Cajero</option>
+                    <option value="Camarero">Camarero</option>
+                    <option value="Cuidador">Cuidador</option>
+                    <option value="Conductor">Conductor</option>
+                    <option value="Asistente">Asistente</option>
+                    <option value="Recepcionista">Recepcionista</option>
+                    <option value="Fontanero">Fontanero</option>
+                    <option value="Niñera">Niñera</option>
+                    <option value="Conserje">Conserje</option>
+                    <option value="Albañil">Albañil</option>
+
+                    <!-- Agrega más opciones según tus necesidades -->
+                </select>
+                <label for="fechaDeContratacion">Fecha de Contratacion</label>
+                <input type="text" id="fechaDeContratacionActualizar" name="fechaDeContratacion" required>
+
+                <label for="saldoDeVacaciones">Saldo de Vacaciones</label>
+                <input type="text" id="saldoVacacionesActualizar" name="saldoDeVacaciones" required>
+
+                <br>
+                <button id="botonConfirmarActualizar">Actualizar</button>
+            </form>
         </div>
     </div>
 
     <div id="modalMovimientos" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p>Contenido del modal Movimientos</p>
+            <h2>Movimientos Empleados</h2>
+            
+            </form>
         </div>
     </div>
     
-    <div class="overlay"></div> <!-- Elemento de superposición -->
     
 
     <script src="Scripts.js"></script>
