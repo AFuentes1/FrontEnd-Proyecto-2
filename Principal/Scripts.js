@@ -103,70 +103,6 @@ function mostrarTabla(data) {
     dataContainer.appendChild(table);
 }
 
-//Mostrar Movimientos 
-/*
-function mostrarModalConMovimientos(data) {
-    // Abrir el modal de movimientos
-    mostrarModal('modalImprimirMovimientos');
-
-    // Mostrar los datos en el modal
-    const modalContainer = document.getElementById('modalImprimirMovimientos');
-    
-    // Crear la tabla
-    const table = document.createElement('table');
-    table.classList.add('tabla');
-
-    // Crear el encabezado de la tabla con todas las columnas disponibles
-    const headerRow = document.createElement('tr');
-    for (let key in data) {
-        const th = document.createElement('th');
-        th.textContent = key;
-        headerRow.appendChild(th);
-    }
-    table.appendChild(headerRow);
-
-    // Crear la fila de datos
-    const row = document.createElement('tr');
-    for (let key in data) {
-        const cell = document.createElement('td');
-        cell.textContent = data[key];
-        row.appendChild(cell);
-    }
-    table.appendChild(row);
-
-    // Limpiar el contenido previo del modal
-    modalContainer.innerHTML = '';
-
-    // Agregar la tabla al modal
-    modalContainer.appendChild(table);
-
-    // Crear el botón de cierre
-    const closeButton = document.createElement('span');
-    closeButton.classList.add('close');
-    closeButton.innerHTML = '&times;';
-
-    // Agregar el botón de cierre al modal
-    const modalContent = modalContainer.querySelector('.modal-content');
-    if (modalContent) {
-        modalContent.appendChild(closeButton);
-    } else {
-        console.error('No se encontró ningún elemento con la clase modal-content dentro de modalContainer');
-    }
-    
-    // Obtener el botón de cerrar y cerrar el modal cuando se hace clic en él
-    closeButton.addEventListener('click', function() {
-        modalContainer.style.display = 'none';
-    });
-
-    // Cerrar el modal cuando se hace clic fuera de él
-    window.addEventListener('click', function(event) {
-        if (event.target == modalContainer) {
-            modalContainer.style.display = 'none';
-        }
-    });
-}
-*/
-
 
 //BOTON Consulta
 document.addEventListener("DOMContentLoaded", function() {
@@ -497,39 +433,26 @@ function crearTablaMovimiento(data) {
         cell.textContent = data[key];
         row.appendChild(cell);
     }
+
+    // Crear un nuevo botón para realizar alguna acción con los datos
+    const actionButton = document.createElement('button');
+    actionButton.textContent = 'Insertar Movimiento';
+    actionButton.addEventListener('click', function() {
+        
+        mostrarModal('modalInsertarMovimientos');
+    });
+
+    // Crear una celda para el botón y añadir el botón a esa celda
+    const buttonCell = document.createElement('td');
+    buttonCell.appendChild(actionButton);
+    row.appendChild(buttonCell);
+
+    // Agregar la fila de datos, incluido el botón, a la tabla
     table.appendChild(row);
 
     return table;
 }
 
-
-
-// Función para generar la tabla con los datos recibidos
-function crearTablaMovimiento(data) {
-    // Crear la tabla
-    const table = document.createElement('table');
-    table.classList.add('tabla');
-
-    // Crear el encabezado de la tabla con todas las columnas disponibles
-    const headerRow = document.createElement('tr');
-    for (let key in data) {
-        const th = document.createElement('th');
-        th.textContent = key;
-        headerRow.appendChild(th);
-    }
-    table.appendChild(headerRow);
-
-    // Crear la fila de datos
-    const row = document.createElement('tr');
-    for (let key in data) {
-        const cell = document.createElement('td');
-        cell.textContent = data[key];
-        row.appendChild(cell);
-    }
-    table.appendChild(row);
-
-    return table;
-}
 
 
 document.getElementById('openModalLinkBorrarEmpleado').addEventListener('click', function(event) {
@@ -830,7 +753,8 @@ document.getElementById('botonConfirmarActualizar').addEventListener('click', fu
 
 
 document.getElementById('openModalLinkMovimientos').addEventListener('click', function(event) {
-    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    try {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
     mostrarModal('modalMovimientos');
     var userKey = getCookie("userKey");
     if (!userKey) {
@@ -890,6 +814,9 @@ document.getElementById('openModalLinkMovimientos').addEventListener('click', fu
               
         }
     });
+    } catch (error) {
+        alert("Error al cargar la página, por favor intente de nuevo más tarde");
+    }
 });
 
 
