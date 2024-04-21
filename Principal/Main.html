@@ -173,20 +173,26 @@
             <span class="close">&times;</span>
             <h2>Insertar Movimientos</h2>
             <form id="insertarMovimientosForm">
-                <label for="documentoIdentidad">Documento de Identidad:</label>
-                <input type="text" id="documentoIdentidadMovimientosInsertar" name="documentoIdentidad" required>
+                <label for="montoDeMovimiento">Monto</label>
+                <input type="text" id="montoDeMovimiento" name="montoDeMovimiento" required>
                 <br>
-                <label for="monto">Monto:</label>
-                <input type="text" id="monto" name="monto" required>
-                <br>
-                <label for="descripcion">Descripción:</label>
-                <input type="text" id="descripcion" name="descripcion" required>
+                <label for="tipoDeMovimiento">Tipo de Movimiento</label>
+                <select id="tipoDeMovimiento" name="tipoDeMovimiento" required>
+                    <option value="Cumplir mes">Cumplir mes</option>
+                    <option value="Bono vacacional">Bono vacacional</option>
+                    <option value="Reversion Debito">Reversion Debito</option>
+                    <option value="Disfrute de vacaciones">Disfute de vacaciones</option>
+                    <option value="Venta de vacaciones">Venta de vacaciones</option>
+                    <option value="Reversion de Credito">Reversion de Credito</option>
+                </select>
                 <br>
                 <button id="botonInsertarMovimientos">Insertar</button>
             </form>       
         </div>
     </div>
     
+    <button id="botonCerrarSesion">Cerrar Sesión</button>
+
 
     <script src="Scripts.js"></script>
 </body>

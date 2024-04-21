@@ -373,6 +373,7 @@ function mostrarModalConDatosActualizar() {
     
 }
 
+var datosObtenidosInsertarMovimiento;
 function mostrarModalConMovimientos(data) {
     // Abrir el modal de movimientos
     mostrarModal('modalImprimirMovimientos');
@@ -751,7 +752,7 @@ document.getElementById('botonConfirmarActualizar').addEventListener('click', fu
 });
 
 
-
+var documentoIdentidadMovimientos;
 document.getElementById('openModalLinkMovimientos').addEventListener('click', function(event) {
     try {
         event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
@@ -772,7 +773,7 @@ document.getElementById('openModalLinkMovimientos').addEventListener('click', fu
         event.stopPropagation()
 
         var documentoIdentidad = documentoIdentidadSelect.value;
-
+        documentoIdentidadMovimientos = documentoIdentidad;
         if (documentoIdentidad){
             var formData = {
                 key: userKey,
@@ -817,6 +818,96 @@ document.getElementById('openModalLinkMovimientos').addEventListener('click', fu
     } catch (error) {
         alert("Error al cargar la página, por favor intente de nuevo más tarde");
     }
+});
+
+document.getElementById('botonInsertarMovimientos').addEventListener('click', function(event) {
+        
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    var userKey = getCookie("userKey");
+    if (!userKey) {
+        console.log("No se encontró la userKey en la cookie");
+        return;
+    }
+    var documentoIdentidad = documentoIdentidadMovimientos;
+    var monto = document.getElementById('montoDeMovimiento').value;
+    var tipoDeMovimiento = document.getElementById('tipoDeMovimiento').value; 
+    var formData = {
+        key: userKey,
+        DocIdIn: documentoIdentidad,
+        NombreTipoMovimiento: tipoDeMovimiento,
+        monto: monto
+    };
+    
+    var jsonData = JSON.stringify(formData);
+    console.log(jsonData);
+
+    //Se envia al API
+    fetch('https://localhost:7081/Movements/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+        },
+        body: jsonData // Envía la userKey, filtro y consulta al servidor
+    })
+
+    .then(response => {
+        console.log(response);
+        if (response.ok) {
+            return response.json(); // Devuelve los datos JSON de la respuesta
+        } else {
+            throw new Error('La respuesta del servidor no es válida');
+        }
+    })
+
+    .then(data => {
+        
+        alert("Movimiento insertado correctamente")
+
+    })
+    .catch(error => {
+        // Para manejar los errores 
+        console.error('Error:', error);
+    });
+    cerrarModal('modalInsertarMovimientos');
+    
+});
+
+document.getElementById('botonCerrarSesion').addEventListener('click', function(event) {
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    var userKey = getCookie("userKey");
+    if (!userKey) {
+        console.log("No se encontró la userKey en la cookie");
+        return;
+    }
+    var formData = {
+        key: userKey
+    };
+    var jsonData = JSON.stringify(formData);
+    fetch('https://localhost:7081/Logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' // Incluye la userKey en el encabezado de autorización
+        },
+        body: jsonData // Envía la userKey al servidor
+    })
+    .then(response => {
+        if (response.ok) {
+            
+            return response.json() // Devuelve los datos JSON de la respuesta
+        } else {
+            throw new Error('La respuesta del servidor no es válida');
+        }
+    })
+    .then(data => {
+
+        window.location.href = "../Login/FrontENd.html"
+        
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+            
+
 });
 
 

@@ -230,22 +230,17 @@ body.modal-open nav a {
 }
 
 
-/* Estilos para el botón coloreado */
-.boton-color {
-    background-color: #4CAF50; /* Color verde */
-    color: white; /* Texto blanco */
-    border: none; /* Sin borde */
-    padding: 8px 16px; /* Relleno */
-    text-align: center; /* Alinear texto al centro */
-    text-decoration: none; /* Sin decoración de texto */
-    display: inline-block; /* Mostrar como elemento en línea */
-    font-size: 16px; /* Tamaño de fuente */
-    margin: 4px 2px; /* Margen */
-    cursor: pointer; /* Cursor tipo puntero */
-    border-radius: 4px; /* Bordes redondeados */
-}
-
-/* Estilos para el botón al pasar el ratón */
-.boton-color:hover {
-    background-color: #45a049; /* Cambiar color de fondo al pasar el ratón */
+/* Estilos para el botón flotante */
+#botonCerrarSesion {
+    position: fixed;
+    bottom: 800px; /* Distancia desde abajo */
+    right: 50px; /* Distancia desde la derecha */
+    background-color: #1490c162; /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none;
+    border-radius: 10%; /* Forma redondeada */
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    /* Otros estilos según tu preferencia */
 }
