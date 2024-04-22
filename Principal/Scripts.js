@@ -171,6 +171,7 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(data => {
                 // Llamar a la función para mostrar la tabla con los datos recibidos de la API
+                console.log(data);
                 mostrarTabla(data);
             })
             .catch(error => {
