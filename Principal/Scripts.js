@@ -163,6 +163,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 body: jsonData // Envía la userKey, filtro y consulta al servidor
             })
             .then(response => {
+                console.log(response);
                 if (response.ok) {
                     return response.json() // Devuelve los datos JSON de la respuesta
                 } else {
@@ -171,8 +172,11 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(data => {
                 // Llamar a la función para mostrar la tabla con los datos recibidos de la API
-                console.log(data);
-                mostrarTabla(data);
+                if (data.Status == 0){
+                    mostrarTabla(data);
+                } else{
+                    alert("No se encontraron empleados con los filtros seleccionados")
+                }
             })
             .catch(error => {
                 // Para manejar los errores 
@@ -261,6 +265,8 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
     var nombreSelect = document.getElementById('nombre');
     var nombrePuestoSelect = document.getElementById('idPuesto');
     var botonSelect = document.getElementById('botonInsertar');
+
+    
     
     // Cambio en el tipo del botón de inserción
     botonSelect.type = 'button'; // Cambio del tipo a 'button'
@@ -275,6 +281,13 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
         var documentoIdentidad = documentoIdentidadSelect.value;
         var nombre = nombreSelect.value;
 
+        const patron = /^[0-9]{1,}$/;
+        if (!patron.test(documentoIdentidad)) {
+            alert("El documento de identidad debe ser un número");
+            return;
+        }
+            
+        
         if (nombrePuesto && documentoIdentidad && nombre) {
             // Crear objeto de datos a enviar al servidor
             var formData = {
@@ -324,6 +337,7 @@ document.getElementById('openModalLinkInsertarEmpleado').addEventListener('click
                 // Llamar a la función para mostrar la tabla con los datos recibidos de la API
                 mostrarTabla(data);
             })
+            
             .catch(error => {
                 // Para manejar los errores 
                 console.error('Error:', error);
@@ -852,7 +866,7 @@ document.getElementById('botonInsertarMovimientos').addEventListener('click', fu
     })
 
     .then(response => {
-        console.log(response);
+        console.log("r",response);
         if (response.ok) {
             return response.json(); // Devuelve los datos JSON de la respuesta
         } else {
@@ -861,7 +875,7 @@ document.getElementById('botonInsertarMovimientos').addEventListener('click', fu
     })
 
     .then(data => {
-        
+        console.log("d", data)
         alert("Movimiento insertado correctamente")
 
     })
